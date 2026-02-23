@@ -67,6 +67,11 @@ class Ticket extends Model
         return $this->belongsTo(User::class);
     }
 
+    public function comments()
+    {
+        return $this->hasMany(Comment::class);
+    }
+
     /**
      * Scope untuk filter tiket berdasarkan status
      * 
