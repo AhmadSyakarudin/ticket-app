@@ -8,6 +8,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
+use App\Models\LoginAttempt;
 
 /**
  * Login Controller - SECURE IMPLEMENTATION
@@ -75,13 +76,22 @@ class LoginController extends Controller
      */
     public function status(Request $request): View
     {
-        $loginAttempts = \App\Models\LoginAttempt::secure()
-            ->where('email', Auth::user()?->email ?? $request->input('email', ''))
+        $user = Auth::user();
+
+        $email = $user
+            ? $user->email
+            : $request->input('email', '');
+
+        $loginAttempts = LoginAttempt::secure()
+            ->where('email', $email)
             ->latest()
             ->take(10)
             ->get();
 
-        return view('auth.status', [
+        /** @var view-string $view */
+        $view = 'auth.status';
+
+        return view($view, [
             'attempts' => $loginAttempts,
             'isSecure' => true,
         ]);

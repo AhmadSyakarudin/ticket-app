@@ -22,7 +22,7 @@ class Ticket extends Model
      * PENTING untuk keamanan!
      * Hanya kolom yang didefinisikan di sini yang bisa diisi via create() atau update()
      *
-     * @var array<int, string>
+     * @var list<string>
      */
     protected $fillable = [
         'user_id',
@@ -113,11 +113,14 @@ class Ticket extends Model
      */
     public function getStatusBadgeAttribute(): string
     {
-        return match ($this->status) {
-            'open' => 'bg-warning',
-            'in_progress' => 'bg-info',
-            'resolved' => 'bg-success',
-            'closed' => 'bg-secondary',
+        /** @var string $status */
+        $status = (string) $this->status;
+
+        return match (true) {
+            $status === 'open' => 'bg-warning',
+            $status === 'in_progress' => 'bg-info',
+            $status === 'resolved' => 'bg-success',
+            $status === 'closed' => 'bg-secondary',
             default => 'bg-secondary',
         };
     }
@@ -129,10 +132,13 @@ class Ticket extends Model
      */
     public function getPriorityBadgeAttribute(): string
     {
-        return match ($this->priority) {
-            'high' => 'bg-danger',
-            'medium' => 'bg-warning',
-            'low' => 'bg-success',
+        /** @var string $priority */
+        $priority = (string) $this->priority;
+
+        return match (true) {
+            $priority === 'high' => 'bg-danger',
+            $priority === 'medium' => 'bg-warning',
+            $priority === 'low' => 'bg-success',
             default => 'bg-secondary',
         };
     }
